@@ -1,0 +1,26 @@
+analyzer:
+  strong-mode:
+    implicit-casts: false
+  errors:
+    todo: ignore
+  exclude:
+    - flutter/**
+    - lib/api/*.dart
+    - lib/l10n/messages_*.dart
+    - ios/**
+
+    linter:
+  rules:
+    - avoid_empty_else
+    - camel_case_types
+    - cancel_subscriptions
+    - close_sinks
+    - unnecessary_const
+    - unnecessary_new
+    - always_declare_return_types
+    - annotate_overrides
+    - avoid_annotating_with_dynamic
+    - comment_references
+    - empty_catches
+    - unnecessary_lambdas
+    
