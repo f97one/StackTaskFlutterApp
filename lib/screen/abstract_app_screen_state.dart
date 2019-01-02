@@ -2,11 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:stack_task/datasource/firebase_auth_datasource.dart';
 
-abstract class AbstractAppScreen extends StatelessWidget {
-
-  final String title;
-
-  AbstractAppScreen({Key key, this.title}) : super(key: key);
+abstract class AbstractAppScreenState<T extends StatefulWidget> extends State<T> {
 
   Future<FirebaseUser> currentUser() async {
     return await FirebaseAuthDatasource().currentUser();
