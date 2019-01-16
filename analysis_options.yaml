@@ -9,7 +9,7 @@ analyzer:
     - lib/l10n/messages_*.dart
     - ios/**
 
-    linter:
+linter:
   rules:
     - avoid_empty_else
     - camel_case_types
