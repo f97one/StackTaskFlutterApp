@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:stack_task/screen/app_config_screen.dart';
 import 'package:stack_task/screen/login_screen.dart';
-import 'package:stack_task/screen/splash_screen.dart';
 import 'package:stack_task/screen/task_list_screen.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 void main() => runApp(MyApp());
 
@@ -9,6 +10,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    FirebaseDatabase.instance.setPersistenceEnabled(true);
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -16,7 +19,8 @@ class MyApp extends StatelessWidget {
       ),
       routes: <String, WidgetBuilder> {
         '/': (_) => LoginScreen(title: 'Login'),
-        '/tasklist': (_) => TaskListScreen(title: 'Task List'),
+        '/tasklist': (_) => TaskListScreen(),
+        '/appconfig': (_) => AppConfigScreen(),
       },
     );
   }
