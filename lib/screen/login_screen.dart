@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:stack_task/datasource/firebase_auth_datasource.dart';
@@ -36,7 +34,12 @@ class _LoginScreenState extends State<LoginScreen> {
               onPressed: () {
                 FirebaseAuthDatasource().handleSignIn().then((user) {
                   if (user != null) {
-                    Navigator.pushReplacementNamed(context, '/tasklist');
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          settings: const RouteSettings(name: '/tasklist'),
+                          builder: (BuildContext context) => TaskListScreen(user: user),
+                        ));
                   }
                 }).catchError((onError) {
                   Fluttertoast.showToast(
@@ -45,11 +48,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       toastLength: Toast.LENGTH_SHORT);
                 });
               },
-              color: const Color(0xFF0099ed),
+              color: const Color(0xFF505050),
               child: Text("Login with Google",
                   style: TextStyle(
                       fontSize: 12.0,
-                      color: const Color(0xFFffffff),
+                      color: const Color(0xFFcfcfcf),
                       fontWeight: FontWeight.w200,
                       fontFamily: "Roboto"))),
         )
