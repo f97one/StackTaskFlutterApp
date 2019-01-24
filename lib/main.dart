@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stack_task/screen/app_config_screen.dart';
 import 'package:stack_task/screen/login_screen.dart';
-import 'package:stack_task/screen/task_list_screen.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 void main() => runApp(MyApp());
@@ -17,10 +15,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      routes: <String, WidgetBuilder> {
+      routes: <String, WidgetBuilder>{
         '/': (_) => LoginScreen(title: 'Login'),
-        '/tasklist': (_) => TaskListScreen(),
-        '/appconfig': (_) => AppConfigScreen(),
       },
     );
   }
