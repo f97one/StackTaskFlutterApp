@@ -3,30 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:stack_task/datasource/firebase_auth_datasource.dart';
 
 abstract class AbstractAppScreenState<T extends StatefulWidget> extends State<T> {
-
-  /**
-   * NavigationDrawerを組み立てる。
-   *
-   * @param context
-   */
-  Widget createDrawer(BuildContext context) {
-    return FutureBuilder<FirebaseUser>(
-      future: FirebaseAuthDatasource().currentUser(),
-      builder: (BuildContext ctx, AsyncSnapshot<FirebaseUser> snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return _makeDrawer(context, snapshot.data);
-        }
-      },
-    );
-  }
-
   PreferredSizeWidget createDefaultAppBar(String title) {
     return AppBar(
       title: Text(title),
     );
   }
 
-  Drawer _makeDrawer(BuildContext context, FirebaseUser firebaseUser) {
+  Widget createDrawer(BuildContext context, FirebaseUser firebaseUser) {
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
