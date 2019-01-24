@@ -13,4 +13,6 @@ class FirebaseDatabaseDatasource {
   Future<DataSnapshot> readTasksOnce(String uid) async {
     return await _mainReference.child(uid).once();
   }
+
+  DatabaseReference getReference() => _mainReference;
 }
