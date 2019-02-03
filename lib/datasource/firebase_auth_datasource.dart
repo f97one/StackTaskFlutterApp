@@ -3,7 +3,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:async';
 
 class FirebaseAuthDatasource {
-
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -15,9 +14,10 @@ class FirebaseAuthDatasource {
     GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
     GoogleSignInAuthentication googleAuth = await googleSignInAccount.authentication;
 
-    return await _auth.signInWithGoogle(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken
-    );
+    return await _auth.signInWithGoogle(accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+  }
+
+  Future<void> logout() async {
+    return await _auth.signOut();
   }
 }
