@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:stack_task/datasource/firebase_auth_datasource.dart';
+import 'package:stack_task/screen/task_list_screen.dart';
 
 abstract class AbstractAppScreenState<T extends StatefulWidget> extends State<T> {
   PreferredSizeWidget createDefaultAppBar(String title) {
@@ -36,10 +37,14 @@ abstract class AbstractAppScreenState<T extends StatefulWidget> extends State<T>
           ListTile(
             title: Text('Task List'),
             onTap: () {
-              // ToDo : タスクリスト画面への遷移を書く
-//              Navigator.of(context).pushReplacementNamed('/tasklist');
-              debugPrint('タスクリストを押した');
               Navigator.pop(context);
+              // タスクリスト画面へ遷移
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    settings: const RouteSettings(name: '/tasklist'),
+                    builder: (BuildContext context) => TaskListScreen(user: firebaseUser),
+                  ));
             },
           ),
           ListTile(
@@ -54,8 +59,7 @@ abstract class AbstractAppScreenState<T extends StatefulWidget> extends State<T>
           ListTile(
             title: Text('Logout'),
             onTap: () {
-              // ToDo : ログアウト要求を書く
-              debugPrint('ログアウトを押した');
+              // ログアウト要求を出してログイン画面へ
               Navigator.pop(context);
 
               FirebaseAuthDatasource()
