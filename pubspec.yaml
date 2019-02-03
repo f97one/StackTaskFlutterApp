@@ -26,6 +26,9 @@ dependencies:
   shared_preferences: ^0.4.3
   smooth_star_rating: 1.0.1
 
+  flutter_localizations:
+    sdk: flutter
+
 dev_dependencies:
   flutter_driver:
     sdk: flutter

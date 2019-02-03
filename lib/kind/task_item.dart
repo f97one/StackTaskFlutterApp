@@ -1,4 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
+import "package:intl/intl.dart";
+import 'package:intl/date_symbol_data_local.dart';
 
 /// タスクアイテム
 class TaskItem {
@@ -48,4 +50,11 @@ class TaskItem {
         'createdAt': createdAt.millisecondsSinceEpoch,
         'updatedAt': updatedAt.millisecondsSinceEpoch
       };
+
+  /// 期日をDateTimeから書式設定済みStringとして取得する。
+  String dueDateByString() {
+    initializeDateFormatting("ja_JP");
+    var formatter = DateFormat('yyyy/MM/dd HH:mm', "ja_JP");
+    return formatter.format(this.dueDate);
+  }
 }
