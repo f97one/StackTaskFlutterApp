@@ -25,6 +25,7 @@ dependencies:
   fluttertoast: ^2.2.3
   shared_preferences: ^0.4.3
   smooth_star_rating: 1.0.1
+  quiver: '>=2.0.0 <3.0.0'
 
   flutter_localizations:
     sdk: flutter
