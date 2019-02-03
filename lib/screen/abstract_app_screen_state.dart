@@ -57,12 +57,13 @@ abstract class AbstractAppScreenState<T extends StatefulWidget> extends State<T>
               // ToDo : ログアウト要求を書く
               debugPrint('ログアウトを押した');
               Navigator.pop(context);
+
               FirebaseAuthDatasource()
                   .logout()
                   .then((_) => Navigator.pushReplacementNamed(context, '/'))
                   .catchError((onError) {
                 Fluttertoast.showToast(
-                  msg: 'Authentication Failed, Please retry.',
+                  msg: 'Logout Request Failed, Please retry.',
                   gravity: ToastGravity.BOTTOM,
                   toastLength: Toast.LENGTH_SHORT,
                 );
