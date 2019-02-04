@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:stack_task/datasource/preference_datasource.dart';
+import 'package:stack_task/kind/dropdown_item_valuepair.dart';
 import 'package:stack_task/screen/abstract_app_screen_state.dart';
 import 'package:stack_task/screen/abstract_stateful_screen.dart';
 
@@ -10,7 +12,7 @@ class AppConfigScreen extends BaseStatefulScreen {
   _AppConfigScreenState createState() => _AppConfigScreenState();
 }
 
-class _AppConfigScreenState extends AbstractAppScreenState<AppConfigScreen> with WidgetsBindingObserver {
+class _AppConfigScreenState extends AbstractAppScreenState<AppConfigScreen> {
   final String title = 'Settings';
 
   @override
@@ -23,27 +25,55 @@ class _AppConfigScreenState extends AbstractAppScreenState<AppConfigScreen> with
   }
 
   Widget _createBody() {
-    return null;
-  }
+    List<DropdownItemValuePair> dropdownItems = [
+      DropdownItemValuePair(PreferenceDatasource.ORDER_BY_DUE_DATE),
+      DropdownItemValuePair(PreferenceDatasource.ORDER_BY_PRIORITY),
+      DropdownItemValuePair(PreferenceDatasource.ORDER_BY_TASK_NAME)
+    ];
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    setState(() {
-      if (state == AppLifecycleState.inactive) {
-        // TODO : Preferenceへの書き戻し処理を書く
-      }
-    });
+    return Padding(
+      padding: EdgeInsets.all(16.0),
+      child: Column(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text('Task ordered by '),
+              DropdownButton<DropdownItemValuePair>(
+                items: dropdownItems.map((DropdownItemValuePair val) {
+                  return DropdownMenuItem<DropdownItemValuePair>(
+                    value: val,
+                    child: Text(val.value),
+                  );
+                }).toList(),
+                onChanged: (DropdownItemValuePair newVal) {
+                  setState(() {
+                    taskOrderBy = newVal.key;
+                    PreferenceDatasource().setTaskOrder(newVal.key);
+                  });
+                },
+                value: DropdownItemValuePair(taskOrderBy),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text('Show confirmation when task finishing'),
+              Switch(
+                value: showConfirm,
+                onChanged: (v) {
+                  setState(() {
+                    debugPrint("passed $v");
+                    showConfirm = v;
+                    PreferenceDatasource().setShowConfirmationWhenCompleteChecked(v);
+                  });
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
