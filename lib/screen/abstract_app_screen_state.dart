@@ -2,9 +2,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:stack_task/datasource/firebase_auth_datasource.dart';
+import 'package:stack_task/datasource/preference_datasource.dart';
 import 'package:stack_task/screen/task_list_screen.dart';
 
 abstract class AbstractAppScreenState<T extends StatefulWidget> extends State<T> {
+  bool showConfirm = true;
+  int taskOrderBy = PreferenceDatasource.ORDER_BY_DUE_DATE;
+
   PreferredSizeWidget createDefaultAppBar(String title) {
     return AppBar(
       title: Text(title),
@@ -77,5 +81,21 @@ abstract class AbstractAppScreenState<T extends StatefulWidget> extends State<T>
         ],
       ),
     );
+  }
+
+  @override
+  void initState() {
+    var prefDs = PreferenceDatasource();
+
+    prefDs.getTaskOrder().then((v) {
+      setState(() {
+        taskOrderBy = v;
+      });
+    });
+    prefDs.showConfirmationWhenCompleteChecked().then((v) {
+      setState(() {
+        showConfirm = v;
+      });
+    });
   }
 }
