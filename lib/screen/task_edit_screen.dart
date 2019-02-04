@@ -87,7 +87,7 @@ class _TaskEditScreenState extends AbstractAppScreenState<TaskEditScreen> {
             Padding(
               padding: EdgeInsets.symmetric(vertical: 8.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text('Due Date : '),
                   RaisedButton(
@@ -102,7 +102,7 @@ class _TaskEditScreenState extends AbstractAppScreenState<TaskEditScreen> {
             Padding(
               padding: EdgeInsets.symmetric(vertical: 8.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text('Priority : '),
                   SmoothStarRating(
