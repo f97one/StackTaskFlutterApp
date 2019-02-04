@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:stack_task/datasource/firebase_auth_datasource.dart';
 import 'package:stack_task/datasource/preference_datasource.dart';
+import 'package:stack_task/screen/app_config_screen.dart';
 import 'package:stack_task/screen/task_list_screen.dart';
 
 abstract class AbstractAppScreenState<T extends StatefulWidget> extends State<T> {
@@ -54,9 +55,14 @@ abstract class AbstractAppScreenState<T extends StatefulWidget> extends State<T>
           ListTile(
             title: Text('Setting'),
             onTap: () {
-              // ToDo : アプリ設定画面への遷移を書く
-              debugPrint('設定を押した');
+              // アプリ設定画面へ遷移
               Navigator.pop(context);
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  settings: const RouteSettings(name: '/config'),
+                  builder: (BuildContext context) => AppConfigScreen(user: firebaseUser),
+                ),
+              );
             },
           ),
           ListTile(),
