@@ -7,6 +7,8 @@ import 'package:stack_task/kind/task_item.dart';
 import 'package:stack_task/screen/abstract_app_screen_state.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:stack_task/screen/abstract_stateful_screen.dart';
+import 'package:stack_task/screen/dialog_action_types.dart';
+import 'package:stack_task/screen/msg_dialog.dart';
 import 'package:stack_task/screen/task_edit_screen.dart';
 
 class TaskListScreen extends BaseStatefulScreen {
@@ -26,7 +28,7 @@ class _TaskListScreenState extends AbstractAppScreenState<TaskListScreen> {
   @override
   void initState() {
     super.initState();
-    FirebaseDatabaseDatasource().getReference().child(widget.currentUser.uid).onChildAdded.listen(_onData);
+    FirebaseDatabaseDatasource().reference.child(widget.currentUser.uid).onChildAdded.listen(_onData);
   }
 
   void _onData(Event e) {
@@ -74,6 +76,26 @@ class _TaskListScreenState extends AbstractAppScreenState<TaskListScreen> {
                   _itemList[index].finished = v;
                   _itemCheckedConditions[_itemList[index]] = v;
                 });
+
+                if (showConfirm) {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) =>
+                          MsgDialog(title: 'Confirm', content: 'This task is completed. Is it OK?', context: context)
+                              .buildDialog()).then((value) {
+                    switch (value) {
+                      case DialogActionTypes.ok:
+                        FirebaseDatabaseDatasource()
+                            .putTask(taskItem: _itemList[index], uid: widget.currentUser.uid, isCreation: false);
+                        break;
+                      case DialogActionTypes.cancel:
+                      default:
+                        break;
+                    }
+                  });
+                } else {
+                  FirebaseDatabaseDatasource().putTask(taskItem: _itemList[index], uid: widget.currentUser.uid);
+                }
               },
             ),
           ),
