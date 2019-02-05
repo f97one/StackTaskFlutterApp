@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:stack_task/datasource/firebase_database_datasource.dart';
-import 'package:stack_task/datasource/preference_datasource.dart';
 import 'package:stack_task/kind/task_item.dart';
 import 'package:stack_task/screen/abstract_app_screen_state.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
@@ -104,15 +103,17 @@ class _TaskListScreenState extends AbstractAppScreenState<TaskListScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(
-                _itemList[index].taskName,
-                softWrap: false,
-                overflow: TextOverflow.ellipsis,
+              Padding(
+                padding: EdgeInsets.only(bottom: 6.0),
+                child: Text(
+                  _itemList[index].taskName,
+                  softWrap: false,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 22.0),
+                ),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
                     _itemList[index].dueDateByString(),
