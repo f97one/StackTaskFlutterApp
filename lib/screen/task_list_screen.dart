@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:stack_task/datasource/firebase_database_datasource.dart';
+import 'package:stack_task/datasource/preference_datasource.dart';
+import 'package:stack_task/kind/dropdown_item_valuepair.dart';
 import 'package:stack_task/kind/task_item.dart';
 import 'package:stack_task/screen/abstract_app_screen_state.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
@@ -41,9 +43,33 @@ class _TaskListScreenState extends AbstractAppScreenState<TaskListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<DropdownItemValuePair> dropdownItems = [
+      DropdownItemValuePair(PreferenceDatasource.ORDER_BY_DUE_DATE),
+      DropdownItemValuePair(PreferenceDatasource.ORDER_BY_PRIORITY),
+      DropdownItemValuePair(PreferenceDatasource.ORDER_BY_TASK_NAME)
+    ];
+
+    _sortTasks(taskOrderBy);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
+        actions: <Widget>[
+          PopupMenuButton<DropdownItemValuePair>(
+            itemBuilder: (BuildContext context) {
+              return dropdownItems.map((DropdownItemValuePair valuePair) {
+                return PopupMenuItem<DropdownItemValuePair>(
+                  value: valuePair,
+                  child: Text(valuePair.value),
+                );
+              }).toList();
+            },
+            onSelected: (DropdownItemValuePair selected) {
+              taskOrderBy = selected.key;
+              _sortTasks(selected.key);
+            },
+          ),
+        ],
       ),
       drawer: createDrawer(context, widget.currentUser),
       floatingActionButton: FloatingActionButton(
@@ -56,6 +82,22 @@ class _TaskListScreenState extends AbstractAppScreenState<TaskListScreen> {
         itemCount: _itemList.length,
       ),
     );
+  }
+
+  void _sortTasks(int taskOrder) {
+    setState(() {
+      switch (taskOrder) {
+        case PreferenceDatasource.ORDER_BY_DUE_DATE:
+          _itemList.sort((a, b) => a.dueDate.compareTo(b.dueDate));
+          break;
+        case PreferenceDatasource.ORDER_BY_PRIORITY:
+          _itemList.sort((a, b) => b.priority.compareTo(a.priority));
+          break;
+        case PreferenceDatasource.ORDER_BY_TASK_NAME:
+          _itemList.sort((a, b) => a.taskName.compareTo(b.taskName));
+          break;
+      }
+    });
   }
 
   Widget _buildItemCard(int index) {
