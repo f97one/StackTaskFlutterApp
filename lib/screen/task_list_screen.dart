@@ -140,34 +140,45 @@ class _TaskListScreenState extends AbstractAppScreenState<TaskListScreen> {
               },
             ),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(bottom: 6.0),
-                child: Text(
-                  _itemList[index].taskName,
-                  softWrap: false,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 22.0),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                settings: const RouteSettings(name: '/taskedit'),
+                builder: (BuildContext ctx) => TaskEditScreen(
+                      user: widget.currentUser,
+                      taskItem: _itemList[index],
+                    ),
+              ));
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(bottom: 6.0),
+                  child: Text(
+                    _itemList[index].taskName,
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 22.0),
+                  ),
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    _itemList[index].dueDateByString(),
-                  ),
-                  SmoothStarRating(
-                    allowHalfRating: false,
-                    starCount: 3,
-                    rating: _itemList[index].priority.toDouble(),
-                  ),
-                ],
-              ),
-            ],
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      _itemList[index].dueDateByString(),
+                    ),
+                    SmoothStarRating(
+                      allowHalfRating: false,
+                      starCount: 3,
+                      rating: _itemList[index].priority.toDouble(),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),
