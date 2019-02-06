@@ -91,6 +91,7 @@ abstract class AbstractAppScreenState<T extends StatefulWidget> extends State<T>
 
   @override
   void initState() {
+    super.initState();
     var prefDs = PreferenceDatasource();
 
     prefDs.getTaskOrder().then((v) {
