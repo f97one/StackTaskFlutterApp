@@ -7,6 +7,8 @@ import 'package:stack_task/kind/task_item.dart';
 import 'package:stack_task/screen/abstract_app_screen_state.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:stack_task/screen/abstract_stateful_screen.dart';
+import 'package:stack_task/screen/dialog_action_types.dart';
+import 'package:stack_task/screen/msg_dialog.dart';
 
 class TaskEditScreen extends BaseStatefulScreen {
   /// 引数保管用、外から書き換えさせさせたくないので private.
@@ -38,9 +40,6 @@ class TaskEditScreen extends BaseStatefulScreen {
 }
 
 class _TaskEditScreenState extends AbstractAppScreenState<TaskEditScreen> {
-  TextEditingController _taskNameController;
-  TextEditingController _taskDetailController;
-
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -62,9 +61,6 @@ class _TaskEditScreenState extends AbstractAppScreenState<TaskEditScreen> {
   }
 
   Widget _buildBody() {
-    _taskNameController = TextEditingController(text: widget.taskItem.taskName);
-    _taskDetailController = TextEditingController(text: widget.taskItem.taskDetail);
-
     return Form(
       key: _formKey,
       child: ListView(
@@ -73,7 +69,12 @@ class _TaskEditScreenState extends AbstractAppScreenState<TaskEditScreen> {
           TextFormField(
             maxLines: 1,
             maxLength: 32,
-            controller: _taskNameController,
+            initialValue: widget.taskItem.taskName,
+            onSaved: (String val) {
+              setState(() {
+                widget.taskItem.taskName = val;
+              });
+            },
             decoration: InputDecoration(
                 labelText: 'Task Name',
                 border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(4.0)))),
@@ -110,13 +111,23 @@ class _TaskEditScreenState extends AbstractAppScreenState<TaskEditScreen> {
               ],
             ),
           ),
-          TextFormField(
-            maxLines: 5,
-            maxLength: 200,
-            controller: _taskDetailController,
-            decoration: InputDecoration(
-              labelText: 'Task Detail',
-              border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(4.0))),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              vertical: 8.0,
+            ),
+            child: TextFormField(
+              maxLines: 5,
+              maxLength: 200,
+              initialValue: widget.taskItem.taskDetail,
+              onSaved: (String val) {
+                setState(() {
+                  widget.taskItem.taskDetail = val;
+                });
+              },
+              decoration: InputDecoration(
+                labelText: 'Task Detail',
+                border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(4.0))),
+              ),
             ),
           ),
           _showFinishedCheck()
@@ -187,14 +198,29 @@ class _TaskEditScreenState extends AbstractAppScreenState<TaskEditScreen> {
 
   Future<void> _onSubmit() async {
     if (_formKey.currentState.validate()) {
-//      Scaffold.of(context).showSnackBar(SnackBar(content: Text('Processing Data...')));
+      _formKey.currentState.save();
 
-      // 送信処理
-      await FirebaseDatabaseDatasource()
-          .putTask(taskItem: widget.taskItem, uid: widget.currentUser.uid, isCreation: widget._isCreationMode);
-//      Scaffold.of(context).hideCurrentSnackBar();
+      if (widget.taskItem.finished) {
+        if (showConfirm) {
+          var result = await showDialog<DialogActionTypes>(
+              context: context,
+              builder: (BuildContext context) =>
+                  MsgDialog(title: 'Confirm', content: 'This task is completed. Is it OK?', context: context)
+                      .buildDialog());
 
-      Navigator.pop(context);
+          if (result == DialogActionTypes.ok) {
+            await FirebaseDatabaseDatasource()
+                .putTask(taskItem: widget.taskItem, uid: widget.currentUser.uid, isCreation: widget._isCreationMode);
+
+            Navigator.pop(context);
+          }
+        }
+      } else {
+        await FirebaseDatabaseDatasource()
+            .putTask(taskItem: widget.taskItem, uid: widget.currentUser.uid, isCreation: widget._isCreationMode);
+
+        Navigator.pop(context);
+      }
     }
   }
 }
