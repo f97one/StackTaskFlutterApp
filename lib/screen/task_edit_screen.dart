@@ -66,6 +66,7 @@ class _TaskEditScreenState extends AbstractAppScreenState<TaskEditScreen> {
     _taskDetailController = TextEditingController(text: widget.taskItem.taskDetail);
 
     return Form(
+      key: _formKey,
       child: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
@@ -199,12 +200,16 @@ class _TaskEditScreenState extends AbstractAppScreenState<TaskEditScreen> {
     }
   }
 
-  void _onSubmit() {
+  Future<void> _onSubmit() async {
     if (_formKey.currentState.validate()) {
-      Scaffold.of(context).showSnackBar(SnackBar(content: Text('Processing Data...')));
+//      Scaffold.of(context).showSnackBar(SnackBar(content: Text('Processing Data...')));
 
-      // TODO: 送信処理を書く
+      // 送信処理
+      await FirebaseDatabaseDatasource()
+          .putTask(taskItem: widget.taskItem, uid: widget.currentUser.uid, isCreation: widget._isCreationMode);
+//      Scaffold.of(context).hideCurrentSnackBar();
 
+      Navigator.pop(context);
     }
   }
 }
