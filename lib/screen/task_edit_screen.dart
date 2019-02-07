@@ -67,75 +67,60 @@ class _TaskEditScreenState extends AbstractAppScreenState<TaskEditScreen> {
 
     return Form(
       key: _formKey,
-      child: Padding(
+      child: ListView(
         padding: EdgeInsets.all(16.0),
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(bottom: 8.0),
-              child: SizedBox(
-                height: 64.0,
-                child: TextFormField(
-                  maxLines: 1,
-                  maxLength: 32,
-                  controller: _taskNameController,
-                  decoration: InputDecoration(
-                    labelText: 'Task Name',
-                  ),
+        children: <Widget>[
+          TextFormField(
+            maxLines: 1,
+            maxLength: 32,
+            controller: _taskNameController,
+            decoration: InputDecoration(
+                labelText: 'Task Name',
+                border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(4.0)))),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text('Due Date : '),
+                RaisedButton(
+                  onPressed: _raiseDateTimePicker,
+                  child: Text(widget.taskItem.dueDateByString()),
                 ),
-              ),
+              ],
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text('Due Date : '),
-                  RaisedButton(
-                    onPressed: _raiseDateTimePicker,
-                    child: Text(widget.taskItem.dueDateByString()),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text('Priority : '),
-                  SmoothStarRating(
-                    starCount: 3,
-                    rating: widget.taskItem.priority.toDouble(),
-                    onRatingChanged: (v) {
-                      setState(() {
-                        widget.taskItem.priority = v.toInt();
-                      });
-                    },
-                    allowHalfRating: false,
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 8.0),
-              child: SizedBox(
-                height: 180.0,
-                child: TextFormField(
-                  maxLines: 5,
-                  maxLength: 200,
-                  controller: _taskDetailController,
-                  decoration: InputDecoration(
-                    labelText: 'Task Detail',
-                  ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text('Priority : '),
+                SmoothStarRating(
+                  starCount: 3,
+                  rating: widget.taskItem.priority.toDouble(),
+                  onRatingChanged: (v) {
+                    setState(() {
+                      widget.taskItem.priority = v.toInt();
+                    });
+                  },
+                  allowHalfRating: false,
                 ),
-              ),
+              ],
             ),
-            Row(
-              children: <Widget>[_showFinishedCheck()],
+          ),
+          TextFormField(
+            maxLines: 5,
+            maxLength: 200,
+            controller: _taskDetailController,
+            decoration: InputDecoration(
+              labelText: 'Task Detail',
+              border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(4.0))),
             ),
-          ],
-        ),
+          ),
+          _showFinishedCheck()
+        ],
       ),
     );
   }
