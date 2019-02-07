@@ -91,9 +91,7 @@ class _TaskEditScreenState extends AbstractAppScreenState<TaskEditScreen> {
                 children: <Widget>[
                   Text('Due Date : '),
                   RaisedButton(
-                    onPressed: () {
-                      // TODO 期日選択ダイアログを出す処理を書く
-                    },
+                    onPressed: _raiseDateTimePicker,
                     child: Text(widget.taskItem.dueDateByString()),
                   ),
                 ],
@@ -139,6 +137,46 @@ class _TaskEditScreenState extends AbstractAppScreenState<TaskEditScreen> {
         ),
       ),
     );
+  }
+
+  /// DatePicker → TimePicker の順に Dialog をあげる.
+  Future<void> _raiseDateTimePicker() async {
+    // firstDateは1か月前の初日にする
+    int firstY;
+    int firstM;
+    if (widget.taskItem.dueDate.month == DateTime.january) {
+      firstY = widget.taskItem.dueDate.year - 1;
+      firstM = DateTime.december;
+    } else {
+      firstY = widget.taskItem.dueDate.year;
+      firstM = widget.taskItem.dueDate.month - 1;
+    }
+    final DateTime firstDate = DateTime(firstY, firstM);
+
+    // lastDateは12か月後の最終日にする
+    final DateTime ld = DateTime(widget.taskItem.dueDate.year + 1, widget.taskItem.dueDate.month + 1);
+    final DateTime lastDate = ld.add(Duration(days: -1));
+
+    // DatePickerDialog起動
+    final DateTime resultDt = await showDatePicker(
+        context: context, initialDate: widget.taskItem.dueDate, firstDate: firstDate, lastDate: lastDate);
+
+    // DatePickerDialogをユーザー操作でキャンセルした場合は、以後何もしない
+    if (resultDt == null) {
+      return;
+    }
+
+    // TimePickerDialog起動
+    final TimeOfDay tod = TimeOfDay(hour: widget.taskItem.dueDate.hour, minute: widget.taskItem.dueDate.minute);
+    final TimeOfDay resultToD = await showTimePicker(context: context, initialTime: tod);
+
+    setState(() {
+      if (resultDt != null && resultToD != null) {
+        // Dart の DateTime には set がないので、新しいインスタンスを作って差し替える
+        var newDt = DateTime(resultDt.year, resultDt.month, resultDt.day, resultToD.hour, resultToD.minute);
+        widget.taskItem.dueDate = newDt;
+      }
+    });
   }
 
   Widget _showFinishedCheck() {
