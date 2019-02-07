@@ -124,14 +124,9 @@ class _TaskListScreenState extends AbstractAppScreenState<TaskListScreen> {
                       builder: (BuildContext context) =>
                           MsgDialog(title: 'Confirm', content: 'This task is completed. Is it OK?', context: context)
                               .buildDialog()).then((value) {
-                    switch (value) {
-                      case DialogActionTypes.ok:
-                        FirebaseDatabaseDatasource()
-                            .putTask(taskItem: _itemList[index], uid: widget.currentUser.uid, isCreation: false);
-                        break;
-                      case DialogActionTypes.cancel:
-                      default:
-                        break;
+                    if (value == DialogActionTypes.ok) {
+                      FirebaseDatabaseDatasource()
+                          .putTask(taskItem: _itemList[index], uid: widget.currentUser.uid, isCreation: false);
                     }
                   });
                 } else {
